@@ -1,9 +1,28 @@
+import http.server
 import asyncio
 import logging
+import os
+import socketserver
+import threading
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import LabeledPrice, PreCheckoutQuery
+
+PORT = int(os.environ.get("PORT", 10000))
+
+class SimpleHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running!")
+
+def run_web_server():
+    with socketserver.TCPServer(("", PORT), SimpleHandler) as httpd:
+        httpd.serve_forever()
+
+# Запускаем веб-сервер в фоновом потоке, чтобы он не мешал боту
+threading.Thread(target=run_web_server, daemon=True).start()
 
 PRICE = 100  # Стоимость в Telegram Stars
 BOT_TOKEN = "8860571736:AAHVhPyhpaxI68eBuV1lTQAgl0r9SjiM4fw"
