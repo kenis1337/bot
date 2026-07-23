@@ -10,7 +10,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import LabeledPrice, PreCheckoutQuery
 
 # ==================== НАСТРОЙКИ (ИЗМЕНЯЙТЕ ПОД СВОИ ЗАДАЧИ) ====================
-BOT_TOKEN = "8860571736:AAHVhPyhpaxI68eBuV1LTQAgI0r9Sjim4fw"
+BOT_TOKEN = "8860571736:AAGBsPfpz5n2OWH1zbCpWUU2xc5vfkkod9s"
 CHANNEL_ID = -100443430263  # ID приватного канала для выдачи доступа
 
 # Чат или канал для отправки логов продаж (чтобы партнер видел каждую покупку)
