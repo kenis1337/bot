@@ -28,9 +28,9 @@ dp = Dispatcher()
 # Для Telegram Stars: PROVIDER_TOKEN = "", CURRENCY = "XTR", PRICE = 100
 # Для долларов (USD): PROVIDER_TOKEN = "ВАШ_ТОКЕН_ИЗ_BOTFATHER", CURRENCY = "USD", PRICE = 500 (5.00 USD)
 
-async def on_startup(bot: Bot) -> None:
+async def on_startup(Bot: Bot) -> None:
     # При запуске сервера автоматически регистрируем вебхук в Telegram
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    await Bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
 async def handle_index(request):
     # Главная страница твоего сайта или заглушка для Cron Job
@@ -48,13 +48,13 @@ def main():
     # Регистрируем обработчик входящих запросов от Telegram
     webhook_requests_handler = SimpleRequestHandler(
         dispatcher=dp,
-        bot=bot,
+        Bot=Bot,
     )
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
 
     # Привязываем жизненный цикл бота к веб-серверу
     dp.startup.register(on_startup)
-    setup_application(app, dp, bot=bot)
+    setup_application(app, dp, Bot=Bot)
 
     # Запускаем сервер (порт обычно выдается хостингом автоматически, локально по умолчанию 8080)
     web.run_app(app, host="0.0.0.0", port=8080)
@@ -85,7 +85,7 @@ def run_web_server():
 threading.Thread(target=run_web_server, daemon=True).start()
 
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=BOT_TOKEN)
+Bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 # Защита от дубликатов с ограничением памяти
@@ -124,7 +124,7 @@ async def process_buy(callback: types.CallbackQuery):
 
     prices = [LabeledPrice(label=LABEL_TEXT, amount=PRICE)]
     try:
-        await bot.send_invoice(
+        await Bot.send_invoice(
             chat_id=callback.from_user.id,
             title="Доступ в закрытый канал",
             description="Покупка персональной одноразовой ссылки-приглашения.",
@@ -140,7 +140,7 @@ async def process_buy(callback: types.CallbackQuery):
 
 @dp.pre_checkout_query()
 async def process_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
-    await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+    await Bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 @dp.message(F.successful_payment)
 async def process_successful_payment(message: types.Message):
@@ -149,7 +149,7 @@ async def process_successful_payment(message: types.Message):
     
     try:
         # Создание одноразовой ссылки на впуск в канал
-        invite_link = await bot.create_chat_invite_link(
+        invite_link = await Bot.create_chat_invite_link(
             chat_id=CHANNEL_ID,
             member_limit=1,
             name=f"Link for {message.from_user.id}"
@@ -178,8 +178,8 @@ async def process_successful_payment(message: types.Message):
         await message.answer("❌ Оплата прошла, но произошла ошибка при генерации ссылки. Обратитесь к администратору.")
 
 async def main():
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    await Bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(Bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
