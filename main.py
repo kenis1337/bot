@@ -8,18 +8,60 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import LabeledPrice, PreCheckoutQuery
-
+from aiohttp import web
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+import sys
 # ==================== НАСТРОЙКИ (ИЗМЕНЯЙТЕ ПОД СВОИ ЗАДАЧИ) ====================
-BOT_TOKEN = "8860571736:AAGBsPfpz5n2OWH1zbCpWUU2xc5vfkkod9s"
+BOT_TOKEN = "8860571736:AAHVhPyhpaxI68eBuV1LTQAgI0r9Sjim4fw"
 CHANNEL_ID = -100443430263  # ID приватного канала для выдачи доступа
 
 # Чат или канал для отправки логов продаж (чтобы партнер видел каждую покупку)
 # Сюда бот будет автоматически отправлять уведомление с юзернеймом и суммой
 LOG_CHAT_ID = -100443430263  
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_URL = "https://твой-домен.com" + WEBHOOK_PATH
+
+
+dp = Dispatcher()
 
 # Настройки оплаты:
 # Для Telegram Stars: PROVIDER_TOKEN = "", CURRENCY = "XTR", PRICE = 100
 # Для долларов (USD): PROVIDER_TOKEN = "ВАШ_ТОКЕН_ИЗ_BOTFATHER", CURRENCY = "USD", PRICE = 500 (5.00 USD)
+
+async def on_startup(bot: Bot) -> None:
+    # При запуске сервера автоматически регистрируем вебхук в Telegram
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+async def handle_index(request):
+    # Главная страница твоего сайта или заглушка для Cron Job
+    return web.Response(text="SubManager Web & Bot Server is Active!", content_type="text/html")
+
+def main():
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
+    # Создаем единое веб-приложение
+    app = web.Application()
+
+    # Добавляем маршрут для сайта/пингов (сюда будет стучаться Cron Job каждые 5 минут)
+    app.router.add_get("/", handle_index)
+
+    # Регистрируем обработчик входящих запросов от Telegram
+    webhook_requests_handler = SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot,
+    )
+    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+
+    # Привязываем жизненный цикл бота к веб-серверу
+    dp.startup.register(on_startup)
+    setup_application(app, dp, bot=bot)
+
+    # Запускаем сервер (порт обычно выдается хостингом автоматически, локально по умолчанию 8080)
+    web.run_app(app, host="0.0.0.0", port=8080)
+
+if __name__ == "__main__":
+    main()
+
 PROVIDER_TOKEN = ""
 CURRENCY = "XTR"
 PRICE = 100
