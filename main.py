@@ -10,7 +10,7 @@ from aiogram.types import LabeledPrice, PreCheckoutQuery
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 # ================= НАСТРОЙКИ =================
-BOT_TOKEN = "8860571736:AAHVPhypaxi68eBuV1LTQAgI0r9Sjim4fw"
+BOT_TOKEN = "8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY"
 CHANNEL_ID = -100443430263  # ID приватного канала для выдачи доступа
 LOG_CHAT_ID = -100443430263  # Чат для логов продаж
 
