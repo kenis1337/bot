@@ -15,7 +15,7 @@ CHANNEL_ID = -100443430263  # ID приватного канала для выд
 LOG_CHAT_ID = -100443430263  # Чат для логов продаж
 
 # Ссылка на твое приложение на Render (замени на свой реальный домен render.com)
-WEBHOOK_HOST = "https://bot-1-x6t1.onrender.com"
+WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_URL")
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = WEBHOOK_HOST + WEBHOOK_PATH
 
