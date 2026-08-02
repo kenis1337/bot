@@ -10,32 +10,33 @@ from aiogram.types import LabeledPrice, PreCheckoutQuery
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 # ================= НАСТРОЙКИ =================
-BOT_TOKEN = "8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY"
+os.getenv("8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY")
 CHANNEL_ID = -100443430263  # ID приватного канала для выдачи доступа
 LOG_CHAT_ID = -100443430263  # Чат для логов продаж
 
 # Ссылка на твое приложение на Render (замени на свой реальный домен render.com)
-WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_URL")
+WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_URL", "https://bot-2-p19f.onrender.com")
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = WEBHOOK_HOST + WEBHOOK_PATH
 
 # Настройки оплаты
 PROVIDER_TOKEN = ""  # Пусто для Telegram Stars (XTR)
 CURRENCY = "XTR"
-PRICE = 100
+PRICE = 250
 LABEL_TEXT = "Доступ в приватный канал"
 
 PORT = int(os.environ.get("PORT", 10000))
 
 # ================= ИНИЦИАЛИЗАЦИЯ =================
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=os.getenv)
 dp = Dispatcher()
 
 # Защита от дубликатов с ограничением памяти
 processed_updates = set()
 
 def check_and_add(identifier):
+    global processed_updates
     if len(processed_updates) > 10000:
         processed_updates.clear()
     if identifier in processed_updates:
@@ -58,7 +59,7 @@ async def start_handler(message: types.Message):
 
     await message.answer(
         f"Привет, {message.from_user.first_name}!\n\n"
-        "Для получения доступа к прибыльному каналу нажми кнопку ниже:",
+        "Для получения доступа в приватный канал нажмите кнопку ниже:",
         reply_markup=builder.as_markup()
     )
 
@@ -150,6 +151,5 @@ def main():
 
     # Запуск полноценного aiohttp сервера на порту Render
     web.run_app(app, host="0.0.0.0", port=PORT)
-
 if __name__ == "__main__":
     main()
