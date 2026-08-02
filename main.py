@@ -29,7 +29,7 @@ PORT = int(os.environ.get("PORT", 10000))
 
 # ================= ИНИЦИАЛИЗАЦИЯ =================
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-bot = Bot(token=os.getenv)
+bot = Bot(token=os.getenv("8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY"))
 dp = Dispatcher()
 
 # Защита от дубликатов с ограничением памяти
