@@ -10,7 +10,7 @@ from aiogram.types import LabeledPrice, PreCheckoutQuery
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 # ================= НАСТРОЙКИ =================
-os.getenv("8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY")
+os.getenv("8860571736:AAEWQZKvDg3FHHPt0XvWNbplGuK01bTtCy0")
 CHANNEL_ID = -100443430263  # ID приватного канала для выдачи доступа
 LOG_CHAT_ID = -100443430263  # Чат для логов продаж
 
@@ -29,7 +29,7 @@ PORT = int(os.environ.get("PORT", 10000))
 
 # ================= ИНИЦИАЛИЗАЦИЯ =================
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-bot = Bot(token=os.getenv("8860571736:AAG99uUyrkxTZuqxEh5_Xr_D4IoI_Mc2FIY"))
+bot = Bot(token=os.getenv("8860571736:AAEWQZKvDg3FHHPt0XvWNbplGuK01bTtCy0"))
 dp = Dispatcher()
 
 # Защита от дубликатов с ограничением памяти
